@@ -23,13 +23,25 @@ const (
 
 	// Configuration file path for local development
 	defaultConfigSource = "../../../deploy/"
+
+	// NATS Queue group name
+	// Note: Subscribers with same name form a queue group
+	defaultNATSQueueGroupName = "dns.subscribers"
 )
 
 var (
 	// Define flag overrides
 
-	flagNATSServerAddr   = pflag.String("nats.server.addr", defaultNATSServeraddress, "NATS-server address")
-	flagNATSServerPort   = pflag.String("nats.server.port", defaultNATSServerPort, "NATS-server port")
-	flagNATSSubject_DNS  = pflag.String("nats.subject.dns", defaultNATSSubject_DNS, "Default Subject for NATS")
+	// Server related details
+	flagNATSServerAddr = pflag.String("nats.server.addr", defaultNATSServeraddress, "NATS-server address")
+	flagNATSServerPort = pflag.String("nats.server.port", defaultNATSServerPort, "NATS-server port")
+
+	// Pub sub related details
+	flagNATSSubject_DNS = pflag.String("nats.subject.dns", defaultNATSSubject_DNS, "Default Subject for NATS")
+
+	// Config file details
 	flagNATSClientConfig = pflag.String("config.source", defaultConfigSource, "Default config file for NATS client")
+
+	// Queue group related details
+	flagNATSQueueGroup = pflag.String("nats.queue_group.name", defaultNATSQueueGroupName, "NATS Queue Group name")
 )

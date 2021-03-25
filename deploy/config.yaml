@@ -4,4 +4,6 @@ nats:
     port: 4222
   subject:
     dns: dns.service
+  queue_group:
+    name: dns.subscribers
     
