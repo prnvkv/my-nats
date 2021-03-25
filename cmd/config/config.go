@@ -20,12 +20,16 @@ const (
 	// NOTE: This is not required. NATS-server has the capability to create the subject in runtime.
 	// But this configuration is necessary for the documentation and consistency of the service.
 	defaultNATSSubject_DNS = "dns.service"
+
+	// Configuration file path for local development
+	defaultConfigSource = "../../../deploy/"
 )
 
 var (
 	// Define flag overrides
 
-	flagNATSServerAddr  = pflag.String("nats.server.addr", defaultNATSServeraddress, "NATS-server address")
-	flagNATSServerPort  = pflag.String("nats.server.port", defaultNATSServerPort, "NATS-server port")
-	flagNATSSubject_DNS = pflag.String("nats.subject.dns", defaultNATSSubject_DNS, "Default Subject for NATS")
+	flagNATSServerAddr   = pflag.String("nats.server.addr", defaultNATSServeraddress, "NATS-server address")
+	flagNATSServerPort   = pflag.String("nats.server.port", defaultNATSServerPort, "NATS-server port")
+	flagNATSSubject_DNS  = pflag.String("nats.subject.dns", defaultNATSSubject_DNS, "Default Subject for NATS")
+	flagNATSClientConfig = pflag.String("config.source", defaultConfigSource, "Default config file for NATS client")
 )

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+	"runtime"
 	"strings"
 
 	"github.com/prnvkv/my-nats/pkg/pub-sub/pub"
@@ -12,17 +14,30 @@ import (
 func init() {
 	pflag.Parse()
 	viper.BindPFlags(pflag.CommandLine)
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("../../../deploy/")
+	viper.AddConfigPath(viper.GetString("config.source"))
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.Errorf("Error cannot read config file : %s\n", err.Error())
+		os.Exit(1)
+	}
+
 }
 
 func main() {
 	msg := "Hello world"
 	log.Infof("MAIN: message: '%s'", msg)
+	subjectName := viper.GetString("nats.subject.dns")
 
-	err := pub.Publish(msg)
+	err := pub.Publish(subjectName, msg)
 	if err != nil {
 		log.Errorf("ERROR: %s", err.Error())
+		return
 	}
-	return
+	runtime.Goexit()
 }

@@ -1,0 +1,7 @@
+nats:
+  server:
+    addr: 0.0.0.0
+    port: 4222
+  subject:
+    dns: dns.service
+    

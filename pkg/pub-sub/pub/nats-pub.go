@@ -9,18 +9,16 @@ import (
 	"github.com/spf13/viper"
 )
 
-func Publish(message interface{}) error {
+func Publish(subject string, message interface{}) error {
 	serverAddr := viper.GetString("nats.server.addr")
 	serverPort := viper.GetString("nats.server.port")
-	subjectName := viper.GetString("nats.subject.dns")
+	// subjectName := viper.GetString("nats.subject.dns")
 
-	log.Infof("Connecting the nats server: %s:%s\n", serverAddr, serverPort)
-	var natsConnection = "nats://" + serverAddr + serverPort
-	nc, err := nats.Connect(natsConnection,
-		nats.UserInfo("foo", "secret"),
-	)
+	var natsConnection = "nats://" + serverAddr + ":" + serverPort
+
+	log.Infof("Connecting the nats server: %s with subject %s\n", natsConnection, subject)
+	nc, err := nats.Connect(natsConnection)
 	if err != nil {
-		log.Errorf("Error: %s", err)
 		return err
 	}
 
@@ -31,8 +29,8 @@ func Publish(message interface{}) error {
 		return err
 	}
 
-	log.Infof("Publishing the message to the subject: '%s'", subjectName)
+	log.Infof("Publishing the message to the subject: '%s'", subject)
 
-	nc.Publish(subjectName, buf.Bytes())
+	nc.Publish(subject, buf.Bytes())
 	return nil
 }

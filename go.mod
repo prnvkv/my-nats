@@ -1,4 +1,4 @@
-module github.com/prnvnv/my-nats
+module github.com/prnvkv/my-nats
 
 go 1.16
 
