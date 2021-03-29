@@ -27,6 +27,9 @@ const (
 	// NATS Queue group name
 	// Note: Subscribers with same name form a queue group
 	defaultNATSQueueGroupName = "dns.subscribers"
+
+	// // NATS Default config file for local
+	defaultNATSConfigFile = ""
 )
 
 var (
@@ -40,8 +43,13 @@ var (
 	flagNATSSubject_DNS = pflag.String("nats.subject.dns", defaultNATSSubject_DNS, "Default Subject for NATS")
 
 	// Config file details
-	flagNATSClientConfig = pflag.String("config.source", defaultConfigSource, "Default config file for NATS client")
+	flagNATSClientConfig     = pflag.String("config.source", defaultConfigSource, "Default config file for NATS client")
+	flagNATSClientConfigFile = pflag.String("config.file", defaultNATSConfigFile, "Default config file ")
 
 	// Queue group related details
 	flagNATSQueueGroup = pflag.String("nats.queue_group.name", defaultNATSQueueGroupName, "NATS Queue Group name")
 )
+
+func LoadConfig() {
+	pflag.Parse()
+}
