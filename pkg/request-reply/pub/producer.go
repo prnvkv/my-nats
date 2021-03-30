@@ -21,10 +21,6 @@ func Publish(subject string, message interface{}) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	// nc.Subscribe("help", func(m *nats.Msg) {
-	// 	log.Printf("[Received]: %s", string(m.Data))
-	// 	nc.Publish(m.Reply, []byte("I can help!!!"))
-	// })
 
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)

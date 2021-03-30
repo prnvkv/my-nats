@@ -59,7 +59,7 @@ func main() {
 	subjectName := viper.GetString("nats.subject.dns")
 
 	fmt.Println("Server port and subject...", serverAddr, serverPort, subjectName)
-	msg, err := sub.Subscribe(subjectName)
+	msg, err := sub.Subscribe(subjectName, nil)
 	if err != nil {
 		log.Errorf("Error: %s", err)
 		return
