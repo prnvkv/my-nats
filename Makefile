@@ -136,24 +136,24 @@ docker-rep:
 
 .PHONY: push-pub
 push-pub: 
-	@docker push $(IMAGE_NAME_PUB)
+	@docker push $(IMAGE_FULL_PUB)
 
 .PHONY: push-sub
 push-sub: 
-	@docker push $(IMAGE_NAME_SUB)
+	@docker push $(IMAGE_FULL_SUB)
 
 .PHONY: push-qpub
 push-qpub: 
-	@docker push $(IMAGE_NAME_QPUB)
+	@docker push $(IMAGE_FULL_QPUB)
 
 .PHONY: push-qsub
 push-qsub: 
-	@docker push $(IMAGE_NAME_QSUB)
+	@docker push $(IMAGE_FULL_QSUB)
 
 .PHONY: push-req
 push-req: 
-	@docker push $(IMAGE_NAME_REQ)
+	@docker push $(IMAGE_FULL_REQ)
 
 .PHONY: push-rep
 push-rep: 
-	@docker push $(IMAGE_NAME_REP)
+	@docker push $(IMAGE_FULL_REP)
