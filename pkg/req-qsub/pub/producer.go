@@ -48,7 +48,9 @@ func Publish(subject string, message interface{}) ([]byte, error) {
 
 	log.Infof("Publishing the message to the subject: '%s'", subject)
 
-	response, err := nc.Request(subject, buf.Bytes(), 1*time.Second)
+	log.Info("Message:: %s", buf.String())
+
+	response, err := nc.Request(subject, buf.Bytes(), 5*time.Second)
 	if err != nil {
 		return nil, err
 	}

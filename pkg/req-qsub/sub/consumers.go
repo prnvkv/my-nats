@@ -45,7 +45,7 @@ func Subscribe(subject string, queueGroupName string, cb callBackFunc, ackMsg st
 	var receivedMsg []byte
 	nc.QueueSubscribe(subject, queueGroupName, func(m *nats.Msg) {
 		receivedMsg = m.Data
-		log.Printf("[Received] %s \n Calling the function handler ... \n", receivedMsg)
+		log.Printf("[Received] %s \n Calling the function handler ... \n", string(receivedMsg))
 		if cb != nil {
 
 			err = cb(m.Data)
@@ -54,7 +54,7 @@ func Subscribe(subject string, queueGroupName string, cb callBackFunc, ackMsg st
 			}
 
 		}
-		log.Printf("[Received] %s\n", receivedMsg)
+		log.Printf("[Received] %s\n", string(receivedMsg))
 		log.Infof("Sending the ack: %s \n", ackMsg)
 		err = nc.Publish(m.Reply, []byte(ackMsg))
 
