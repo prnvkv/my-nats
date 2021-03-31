@@ -22,6 +22,8 @@ func Subscribe(subject string, queueGroupName string) ([]byte, error) {
 		return nil, err
 	}
 
+	defer nc.Close()
+
 	log.Infof("Consuming the message from the topic: %s\n", subject)
 	var receivedMsg []byte
 	nc.QueueSubscribe(subject, queueGroupName, func(m *nats.Msg) {

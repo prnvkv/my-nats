@@ -22,6 +22,8 @@ func Publish(subject string, message interface{}) ([]byte, error) {
 		return nil, err
 	}
 
+	defer nc.Close()
+
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
 	err = enc.Encode(message)

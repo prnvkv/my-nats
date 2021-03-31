@@ -18,6 +18,7 @@ func Publish(subject string, message interface{}) error {
 	if err != nil {
 		return err
 	}
+	defer nc.Close()
 	// nc.QueueSubscribe("greeting", "workers", func(m *nats.Msg) {
 	// 	log.Printf("[Received] %s", string(m.Data))
 	// })
