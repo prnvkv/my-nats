@@ -6,7 +6,8 @@ DOCKERFILE_QPUB := $(CURDIR)/docker/qpub/.
 DOCKERFILE_QSUB := $(CURDIR)/docker/qsub/.
 DOCKERFILE_REQ := $(CURDIR)/docker/req/.
 DOCKERFILE_REP := $(CURDIR)/docker/rep/.
-
+DOCKERFILE_QREQ := $(CURDIR)/docker/qreq/.
+DOCKERFILE_QREQ_SUB := $(CURDIR)/docker/qreq_sub/.
 # configuration for the build path for each of the app
 PUBSUB_PUB := $(BUILD_PATH)/pub-sub/pub
 PUBSUB_SUB := $(BUILD_PATH)/pub-sub/sub
@@ -14,7 +15,8 @@ QGROUP_PUB := $(BUILD_PATH)/queue-group/producer
 QGROUP_SUB := $(BUILD_PATH)/queue-group/consumer
 REQREPLY_PUB := $(BUILD_PATH)/request-reply/pub
 REQREPLY_SUB := $(BUILD_PATH)/request-reply/sub
-
+REQREPLY_QPUB := $(BUILD_PATH)/req-qsub/pub
+REQREPLY_QSUB := $(BUILD_PATH)/req-qsub/sub
 # configuration for building the docker images
 SRCROOT_ON_HOST := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 SRCROOT_ON_CONTAINER := /go/src/$(PROJECT_ROOT)
@@ -56,6 +58,15 @@ IMAGE_FULL_REQ := $(IMAGE_REGISTRY)/$(IMAGE_NAME_REQ):$(IMAGE_VERSION)
 IMAGE_NAME_REP := dockerrep
 IMAGE_FULL_REP := $(IMAGE_REGISTRY)/$(IMAGE_NAME_REP):$(IMAGE_VERSION)
 
+# queue-request image
+IMAGE_NAME_QREQ := dockerqreq
+IMAGE_FULL_QREQ := $(IMAGE_REGISTRY)/$(IMAGE_NAME_QREQ):$(IMAGE_VERSION)
+
+
+# queue request-subscribe image
+IMAGE_NAME_QREQ_SUB := dockerqreq-sub
+IMAGE_FULL_QREQ_SUB := $(IMAGE_REGISTRY)/$(IMAGE_NAME_QREQ_SUB):$(IMAGE_VERSION)
+
 # go app paths
 SERVER_PUB := $(PROJECT_ROOT)/cmd/pub-sub/pub/
 SERVER_SUB := $(PROJECT_ROOT)/cmd/pub-sub/sub/
@@ -63,7 +74,8 @@ SERVER_QPUB := $(PROJECT_ROOT)/cmd/queue-group/producer/
 SERVER_QSUB := $(PROJECT_ROOT)/cmd/queue-group/consumer/
 SERVER_REQ := $(PROJECT_ROOT)/cmd/request-reply/pub/
 SERVER_REP := $(PROJECT_ROOT)/cmd/request-reply/sub/
-
+SERVER_QREQ := $(PROJECT_ROOT)/cmd/req-qsub/pub/
+SERVER_QREQ_SUB := $(PROJECT_ROOT)/cmd/req-qsub/sub/
 # Targets to build go app binary
 
 .PHONY: build-pub
@@ -102,7 +114,6 @@ build-rep:
 	@echo $(GO_BUILD)
 	@$(GO_BUILD) -o $(REQREPLY_SUB) $(SERVER_REP)
 
-
 # Targets to run docker build for each go app
 
 .PHONY: docker-pub
@@ -131,6 +142,14 @@ docker-req:
 docker-rep: 
 	@docker build -f $(DOCKERFILE_REP) -t $(IMAGE_FULL_REP) .
 
+
+.PHONY: docker-qreq
+docker-qreq: 
+	@docker build -f $(DOCKERFILE_QREQ) -t $(IMAGE_FULL_QREQ) .
+
+.PHONY: docker-qrep
+docker-qrep: 
+	@docker build -f $(DOCKERFILE_QREQ_SUB) -t $(IMAGE_FULL_QREQ_SUB) .
 
 # Targets to push docker image of the go app 
 
