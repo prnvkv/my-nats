@@ -11,9 +11,23 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	srvAddr = "127.0.0.1"
+	srvPort = "4222"
+)
+
 func Publish(subject string, message interface{}) ([]byte, error) {
-	serverAddr := viper.GetString("nats.server.addr")
-	serverPort := viper.GetString("nats.server.port")
+	serverAddr := viper.GetString("NATS_URL")
+	serverPort := viper.GetString("NATS_PORT")
+
+	if len(serverAddr) == 0 {
+		serverAddr = srvAddr
+	}
+
+	if len(serverPort) == 0 {
+		serverPort = srvPort
+	}
+
 	var natsConnection = "nats://" + serverAddr + ":" + serverPort
 
 	log.Infof("Connecting the nats server: %s with subject %s\n", natsConnection, subject)

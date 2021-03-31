@@ -9,10 +9,24 @@ import (
 	"github.com/spf13/viper"
 )
 
-func Subscribe(subject string, queueGroupName string) ([]byte, error) {
-	serverAddr := viper.GetString("nats.server.addr")
-	serverPort := viper.GetString("nats.server.port")
-	// subjectName := viper.GetString("nats.subject.dns")
+const (
+	srvAddr = "127.0.0.1"
+	srvPort = "4222"
+)
+
+type callBackFunc func(msg []byte) error
+
+func Subscribe(subject string, queueGroupName string, cb callBackFunc, ackMsg string) ([]byte, error) {
+	serverAddr := viper.GetString("NATS_URL")
+	serverPort := viper.GetString("NATS_PORT")
+
+	if len(serverAddr) == 0 {
+		serverAddr = srvAddr
+	}
+
+	if len(serverPort) == 0 {
+		serverPort = srvPort
+	}
 
 	natsConnection := "nats://" + serverAddr + ":" + serverPort
 
@@ -28,18 +42,25 @@ func Subscribe(subject string, queueGroupName string) ([]byte, error) {
 	var receivedMsg []byte
 	nc.QueueSubscribe(subject, queueGroupName, func(m *nats.Msg) {
 		receivedMsg = m.Data
-		// err = m.Respond([]byte("success"))
-		err = nc.Publish(m.Reply, []byte("success"))
-		// err = m.Ack()
+		log.Printf("[Received] %s \n Calling the function handler ... \n", receivedMsg)
+		err = cb(m.Data)
+		if err != nil {
+			return
+		}
+		log.Printf("[Received] %s\n", receivedMsg)
+		log.Infof("Sending the ack: %s \n", ackMsg)
+		err = nc.Publish(m.Reply, []byte(ackMsg))
+
 		if err != nil {
 			log.Errorf("Error while ack : %s \n", err.Error())
 			return
 		}
-		log.Printf("[Received] %s\n", receivedMsg)
+		log.Infof("ACK Sent successfully")
+
 	})
 
 	if err != nil {
-		log.Errorf("Error man!! \n ")
+		log.Errorf("ERROR: %s \n ", err.Error())
 		return nil, err
 	}
 
