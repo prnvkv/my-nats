@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/prnvkv/my-nats/cmd/config"
-	"github.com/prnvkv/my-nats/pkg/request-reply/pub"
+	"github.com/prnvkv/my-nats/pkg/req-qsub/pub"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"

@@ -8,17 +8,18 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/nats-io/nats.go"
-	"github.com/spf13/viper"
+	"github.com/prnvkv/my-nats/pkg/util"
 )
 
 const (
-	srvAddr = "127.0.0.1"
+	//nats.default.svc.cluster.local
+	srvAddr = "0.0.0.0"
 	srvPort = "4222"
 )
 
 func Publish(subject string, message interface{}) ([]byte, error) {
-	serverAddr := viper.GetString("NATS_URL")
-	serverPort := viper.GetString("NATS_PORT")
+	serverAddr := util.GetEnv("NATS_URL", srvAddr)
+	serverPort := util.GetEnv("NATS_PORT", srvPort)
 
 	if len(serverAddr) == 0 {
 		serverAddr = srvAddr

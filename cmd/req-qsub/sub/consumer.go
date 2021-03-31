@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/prnvkv/my-nats/cmd/config"
-	"github.com/prnvkv/my-nats/pkg/queue-group/sub"
+	"github.com/prnvkv/my-nats/pkg/req-qsub/sub"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -60,7 +60,7 @@ func main() {
 	queueGroupName := viper.GetString("nats.queue_group.name")
 
 	fmt.Println("Server port and subject...", serverAddr, serverPort, subjectName, queueGroupName)
-	msg, err := sub.Subscribe(subjectName, queueGroupName)
+	msg, err := sub.Subscribe(subjectName, queueGroupName, nil, "receieved..")
 	if err != nil {
 		log.Errorf("Error: %s", err)
 		return

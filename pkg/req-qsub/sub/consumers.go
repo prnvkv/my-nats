@@ -4,21 +4,24 @@ import (
 	"reflect"
 	"runtime"
 
+	"os"
+
 	"github.com/nats-io/nats.go"
+	"github.com/prnvkv/my-nats/pkg/util"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 const (
-	srvAddr = "127.0.0.1"
+	// nats.default.svc.cluster.local
+	srvAddr = "0.0.0.0"
 	srvPort = "4222"
 )
 
 type callBackFunc func(msg []byte) error
 
 func Subscribe(subject string, queueGroupName string, cb callBackFunc, ackMsg string) ([]byte, error) {
-	serverAddr := viper.GetString("NATS_URL")
-	serverPort := viper.GetString("NATS_PORT")
+	serverAddr := util.GetEnv("NATS_URL", srvAddr)
+	serverPort := util.GetEnv("NATS_PORT", srvPort)
 
 	if len(serverAddr) == 0 {
 		serverAddr = srvAddr
@@ -43,9 +46,13 @@ func Subscribe(subject string, queueGroupName string, cb callBackFunc, ackMsg st
 	nc.QueueSubscribe(subject, queueGroupName, func(m *nats.Msg) {
 		receivedMsg = m.Data
 		log.Printf("[Received] %s \n Calling the function handler ... \n", receivedMsg)
-		err = cb(m.Data)
-		if err != nil {
-			return
+		if cb != nil {
+
+			err = cb(m.Data)
+			if err != nil {
+				return
+			}
+
 		}
 		log.Printf("[Received] %s\n", receivedMsg)
 		log.Infof("Sending the ack: %s \n", ackMsg)
@@ -70,4 +77,11 @@ func Subscribe(subject string, queueGroupName string, cb callBackFunc, ackMsg st
 
 	return receivedMsg, nil
 
+}
+
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
 }
