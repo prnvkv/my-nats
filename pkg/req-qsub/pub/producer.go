@@ -1,8 +1,8 @@
 package pub
 
 import (
-	"bytes"
-	"encoding/gob"
+	// "bytes"
+	// "encoding/gob"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -17,7 +17,7 @@ const (
 	srvPort = "4222"
 )
 
-func Publish(subject string, message interface{}) ([]byte, error) {
+func Publish(subject string, message string) ([]byte, error) {
 	serverAddr := util.GetEnv("NATS_URL", srvAddr)
 	serverPort := util.GetEnv("NATS_PORT", srvPort)
 
@@ -39,18 +39,18 @@ func Publish(subject string, message interface{}) ([]byte, error) {
 
 	defer nc.Close()
 
-	var buf bytes.Buffer
-	enc := gob.NewEncoder(&buf)
-	err = enc.Encode(message)
-	if err != nil {
-		return nil, err
-	}
+	// var buf bytes.Buffer
+	// enc := gob.NewEncoder(&buf)
+	// err = enc.Encode(message)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	log.Infof("Publishing the message to the subject: '%s'", subject)
 
-	log.Info("Message:: %s", buf.String())
+	log.Info("Message::", message)
 
-	response, err := nc.Request(subject, buf.Bytes(), 5*time.Second)
+	response, err := nc.Request(subject, []byte(message), 5*time.Second)
 	if err != nil {
 		return nil, err
 	}
