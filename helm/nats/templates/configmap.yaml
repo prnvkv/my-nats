@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  {{ .Values.cm.name }}
+data:
+  nats.conf: |
+    pid_file: {{ .Values.cm.data.pid_file }}
+    http: {{ .Values.cm.data.http }}
+    
+    cluster {
+        port: {{ .Values.cm.data.cluster.port }}
+        routes [
+            {{ template "nats.clusterRoutes" . }}
+        ]
+
+        cluster_advertise: $CLUSTER_ADVERTISE
+        connect_retries: {{ .Values.cm.data.cluster.connect_retries }}
+    }
+
+    leafnodes {
+        port: {{ .Values.cm.data.leafnodes.port }}
+    }

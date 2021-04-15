@@ -4,21 +4,22 @@ import (
 	"reflect"
 	"runtime"
 
-	"os"
-
 	"github.com/nats-io/nats.go"
 	"github.com/prnvkv/my-nats/pkg/util"
 	log "github.com/sirupsen/logrus"
 )
 
 const (
-	// nats.default.svc.cluster.local
+	//Server address, in cluster it will be like: nats.default.svc.cluster.local
 	srvAddr = "0.0.0.0"
+	// Server Port used by the nats by default
 	srvPort = "4222"
 )
 
+//callBackFunc is required to execute the processing of the message received.
 type callBackFunc func(msg []byte) error
 
+// Subscribe receives the subject name, queuegroupname and user defined callback function
 func Subscribe(subject string, queueGroupName string, cb callBackFunc, ackMsg string) ([]byte, error) {
 	serverAddr := util.GetEnv("NATS_URL", srvAddr)
 	serverPort := util.GetEnv("NATS_PORT", srvPort)
@@ -76,12 +77,4 @@ func Subscribe(subject string, queueGroupName string, cb callBackFunc, ackMsg st
 	}
 
 	return receivedMsg, nil
-
-}
-
-func getEnv(key, fallback string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	}
-	return fallback
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Subscribe receives the message using the subject name
 func Subscribe(subject string) ([]byte, error) {
 	serverAddr := viper.GetString("nats.server.addr")
 	serverPort := viper.GetString("nats.server.port")

@@ -9,8 +9,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+//CallBackHandlerFunc is the callback type to define and implement the processing of the message
 type CallBackHandlerFunc func(dbString []byte) error
 
+// Subscribe receieves the subject and callbackhandlerFunc has the parameters
 func Subscribe(subject string, cb CallBackHandlerFunc) ([]byte, error) {
 	serverAddr := viper.GetString("nats.server.addr")
 	serverPort := viper.GetString("nats.server.port")

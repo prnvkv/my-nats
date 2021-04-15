@@ -11,6 +11,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Publish used to publish the messages using subject name and message itself.
 func Publish(subject string, message interface{}) ([]byte, error) {
 	serverAddr := viper.GetString("nats.server.addr")
 	serverPort := viper.GetString("nats.server.port")

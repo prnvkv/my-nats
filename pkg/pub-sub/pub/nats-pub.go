@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Publish publishes the message using subject name
 func Publish(subject string, message interface{}) error {
 	serverAddr := viper.GetString("nats.server.addr")
 	serverPort := viper.GetString("nats.server.port")

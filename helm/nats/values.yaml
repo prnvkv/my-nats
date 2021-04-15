@@ -1,0 +1,27 @@
+# Global 
+namespace: default
+cluster:
+  replicas: 1
+# Usage configmap
+cm:
+  name: nats-config
+  data:
+    pid_file: "/var/run/nats/nats.pid"
+    http: 8222
+    cluster: 
+      port: 6222
+      enabled: false
+      replicas: 1
+      connect_retries: 30
+    leafnodes:
+      port: 7422
+
+ # Service 
+service:
+  clusterIP: None
+
+# Statefulset
+nats:
+  image: nats:2.1.7-alpine3.11
+  pullPolicy: IfNotPresent
+  terminationGracePeriodSeconds: 60

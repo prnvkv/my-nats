@@ -12,11 +12,13 @@ import (
 )
 
 const (
-	//nats.default.svc.cluster.local
+	// Server address, in cluster it will be like this: nats.default.svc.cluster.local
 	srvAddr = "0.0.0.0"
+	// Server Port by default
 	srvPort = "4222"
 )
 
+// Publish receieves the name of the subject and message as arguments
 func Publish(subject string, message string) ([]byte, error) {
 	serverAddr := util.GetEnv("NATS_URL", srvAddr)
 	serverPort := util.GetEnv("NATS_PORT", srvPort)
@@ -38,13 +40,6 @@ func Publish(subject string, message string) ([]byte, error) {
 	}
 
 	defer nc.Close()
-
-	// var buf bytes.Buffer
-	// enc := gob.NewEncoder(&buf)
-	// err = enc.Encode(message)
-	// if err != nil {
-	// 	return nil, err
-	// }
 
 	log.Infof("Publishing the message to the subject: '%s'", subject)
 

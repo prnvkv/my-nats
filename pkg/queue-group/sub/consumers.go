@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Subscribe receives the message using the subject and Queue group name
 func Subscribe(subject string, queueGroupName string) ([]byte, error) {
 	serverAddr := viper.GetString("nats.server.addr")
 	serverPort := viper.GetString("nats.server.port")
@@ -28,9 +29,8 @@ func Subscribe(subject string, queueGroupName string) ([]byte, error) {
 	var receivedMsg []byte
 	nc.QueueSubscribe(subject, queueGroupName, func(m *nats.Msg) {
 		receivedMsg = m.Data
-		// err = m.Respond([]byte("success"))
 		err = nc.Publish(m.Reply, []byte("success"))
-		// err = m.Ack()
+
 		if err != nil {
 			log.Errorf("Error while ack : %s \n", err.Error())
 			return
@@ -39,7 +39,7 @@ func Subscribe(subject string, queueGroupName string) ([]byte, error) {
 	})
 
 	if err != nil {
-		log.Errorf("Error man!! \n ")
+		log.Errorf("Error here!! \n ")
 		return nil, err
 	}
 
