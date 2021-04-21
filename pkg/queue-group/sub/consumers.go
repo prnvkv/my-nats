@@ -25,23 +25,23 @@ func Subscribe(subject string, queueGroupName string) ([]byte, error) {
 
 	// defer nc.Close()
 
-	log.Infof("Consuming the message from the topic: %s\n", subject)
+	log.Infof("Consuming the message from the topic: %s \n", subject)
 	var receivedMsg []byte
 	nc.QueueSubscribe(subject, queueGroupName, func(m *nats.Msg) {
 		receivedMsg = m.Data
-		err = nc.Publish(m.Reply, []byte("success"))
+		// err = nc.Publish(m.Reply, []byte("success"))
 
-		if err != nil {
-			log.Errorf("Error while ack : %s \n", err.Error())
-			return
-		}
-		log.Printf("[Received] %s\n", receivedMsg)
+		// if err != nil {
+		// 	log.Errorf("Error while ack : %s \n", err.Error())
+		// 	return
+		// }
+		log.Printf("[Received] %s  \n", receivedMsg)
 	})
 
-	if err != nil {
-		log.Errorf("Error here!! \n ")
-		return nil, err
-	}
+	// if err != nil {
+	// 	log.Errorf("Error here!! \n ")
+	// 	return nil, err
+	// }
 
 	if len(receivedMsg) == 0 || reflect.ValueOf(receivedMsg).Kind() == reflect.Ptr && reflect.ValueOf(receivedMsg).IsNil() {
 		runtime.Goexit()
