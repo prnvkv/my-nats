@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"os"
-	"runtime"
 	"strings"
 
 	"github.com/prnvkv/my-nats/cmd/config"
 	"github.com/prnvkv/my-nats/pkg/pub-sub/sub"
+	"github.com/prnvkv/my-nats/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -51,19 +51,39 @@ func init() {
 
 }
 
+const (
+	defaultSubject = "test_subject"
+	//Server address, in cluster it will be like: nats.default.svc.cluster.local
+	srvAddr = "0.0.0.0"
+	// Server Port used by the nats by default
+	srvPort = "4222"
+)
+
 func main() {
 
-	serverAddr := viper.GetString("nats.server.addr")
-	serverPort := viper.GetString("nats.server.port")
-	subjectName := viper.GetString("nats.subject.dns")
+	serverAddr := util.GetEnv("NATS_URL", srvAddr)
+	serverPort := util.GetEnv("NATS_PORT", srvPort)
+
+	if len(serverAddr) == 0 {
+		serverAddr = srvAddr
+	}
+
+	if len(serverPort) == 0 {
+		serverPort = srvPort
+	}
+
+	subjectName := util.GetEnv("NATS_SUBJECT", defaultSubject)
 
 	fmt.Println("Server port and subject...", serverAddr, serverPort, subjectName)
-	msg, err := sub.Subscribe(subjectName)
-	if err != nil {
-		log.Errorf("Error: %s", err)
-		return
-	}
-	log.Infof("Recieved the message: %s", msg)
+	for {
+		msg, err := sub.Subscribe(subjectName)
+		if err != nil {
+			log.Errorf("Error: %s", err)
+			return
+		}
+		log.Infof("Recieved the message: %s", msg)
 
-	runtime.Goexit()
+	}
+
+	//runtime.Goexit()
 }
