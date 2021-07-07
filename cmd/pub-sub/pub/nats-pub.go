@@ -2,11 +2,11 @@ package main
 
 import (
 	"os"
-	"runtime"
 	"strings"
 
 	"github.com/prnvkv/my-nats/cmd/config"
 	"github.com/prnvkv/my-nats/pkg/pub-sub/pub"
+	"github.com/prnvkv/my-nats/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -33,15 +33,19 @@ func init() {
 
 }
 
+const (
+	defaultSubject = "test_subject"
+)
+
 func main() {
 	msg := "Hello world"
 	log.Infof("MAIN: message: '%s'", msg)
-	subjectName := viper.GetString("nats.subject.dns")
+	subjectName := util.GetEnv("NATS_SUBJECT", defaultSubject)
 
 	err := pub.Publish(subjectName, msg)
 	if err != nil {
 		log.Errorf("ERROR: %s", err.Error())
 		return
 	}
-	runtime.Goexit()
+	//runtime.Goexit()
 }
