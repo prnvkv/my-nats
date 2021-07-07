@@ -17,9 +17,11 @@ github.com/hashicorp/hcl/json/token
 github.com/magiconair/properties
 # github.com/mitchellh/mapstructure v1.1.2
 github.com/mitchellh/mapstructure
-# github.com/nats-io/nats-server/v2 v2.2.0
+# github.com/nats-io/jwt v1.2.2
 ## explicit
-# github.com/nats-io/nats.go v1.10.1-0.20210228004050-ed743748acac
+# github.com/nats-io/nats-server/v2 v2.1.9
+## explicit
+# github.com/nats-io/nats.go v1.10.1-0.20210409153801-b8530c789d0b
 ## explicit
 github.com/nats-io/nats.go
 github.com/nats-io/nats.go/encoders/builtin

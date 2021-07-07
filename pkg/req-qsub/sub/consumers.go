@@ -17,10 +17,10 @@ const (
 )
 
 //callBackFunc is required to execute the processing of the message received.
-type callBackFunc func(msg []byte) error
+type callBackFunc func(msg []byte) (string, error)
 
 // Subscribe receives the subject name, queuegroupname and user defined callback function
-func Subscribe(subject string, queueGroupName string, cb callBackFunc, ackMsg string) ([]byte, error) {
+func Subscribe(subject string, queueGroupName string, cb callBackFunc) ([]byte, error) {
 	serverAddr := util.GetEnv("NATS_URL", srvAddr)
 	serverPort := util.GetEnv("NATS_PORT", srvPort)
 
@@ -41,6 +41,7 @@ func Subscribe(subject string, queueGroupName string, cb callBackFunc, ackMsg st
 	}
 
 	// defer nc.Close()
+	var ackMsg string
 
 	log.Infof("Consuming the message from the topic: %s\n", subject)
 	var receivedMsg []byte
@@ -49,8 +50,10 @@ func Subscribe(subject string, queueGroupName string, cb callBackFunc, ackMsg st
 		log.Printf("[Received] %s \n Calling the function handler ... \n", string(receivedMsg))
 		if cb != nil {
 
-			err = cb(m.Data)
+			ackMsg, err = cb(m.Data)
 			if err != nil {
+				log.Infof("Sending the ack: %s \n", err.Error())
+				nc.Publish(m.Reply, []byte(err.Error()))
 				return
 			}
 
