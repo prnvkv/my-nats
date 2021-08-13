@@ -60,12 +60,13 @@ func Subscribe(subject string, queueGroupName string, cb callBackFunc) ([]byte, 
 		}
 		log.Printf("[Received] %s\n", string(receivedMsg))
 		log.Infof("Sending the ack: %s \n", ackMsg)
-		err = nc.Publish(m.Reply, []byte(ackMsg))
-
+		nc.Publish(m.Reply, []byte(ackMsg))
+/*
 		if err != nil {
 			log.Errorf("Error while ack : %s \n", err.Error())
 			return
 		}
+*/
 		log.Infof("ACK Sent successfully")
 
 	})
